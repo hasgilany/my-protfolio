@@ -3,9 +3,10 @@ import { ExternalLink, Github, Flame, Layout, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import projectFireSensing from "@/assets/fire-sensing-dashboard.jpg";
 import projectTennisScoreboard from "@/assets/tennis-scoreboard.jpg";
-import projectScadaSystem from "@/assets/Scada-System.png";
 import DragAndDropBuilder from "@/assets/drag-and-drop.png";
 import MedicineTracker from "@/assets/medicine_tracker.png";
+import projectScadaSystem from "@/assets/Scada-System.png";
+
 
 
 const categories = ["All", "Web Development", "IoT", "Mobile App"];
