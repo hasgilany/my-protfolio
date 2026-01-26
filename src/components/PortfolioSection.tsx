@@ -42,7 +42,7 @@ const projects = [
     title: "Scada System ",
     category: "IoT",
     description:
-      "Smart fire detection system that shows the shortest exit route and tracks people count via camera to assist firefighters during emergencies.",
+      "Industrial SCADA system for monitoring and controlling industrial processes in real-time.",
     image: projectScadaSystem,
     technologies: ["Arduino", "JavaScript", "Website"],
     icon: Flame,
