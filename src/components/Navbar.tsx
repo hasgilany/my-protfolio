@@ -1,106 +1,112 @@
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Menu, X, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useActiveSection } from "@/hooks/use-reveal";
+import { profile } from "@/data/profile";
+import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { name: "Home", href: "#home" },
-  { name: "About", href: "#about" },
-  { name: "Services", href: "#services" },
-  { name: "Portfolio", href: "#portfolio" },
-  { name: "Contact", href: "#contact" },
+  { name: "About", id: "about" },
+  { name: "Experience", id: "experience" },
+  { name: "Projects", id: "projects" },
+  { name: "Contact", id: "contact" },
 ];
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [active, setActive] = useState("home");
 
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-    setIsOpen(false);
-  };
+  useActiveSection(["home", ...navLinks.map((l) => l.id)], setActive);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <a
-            href="#home"
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToSection("#home");
-            }}
-            className="font-display text-2xl font-bold text-gradient-primary"
-          >
-            Hasan.
-          </a>
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        scrolled || isOpen
+          ? "border-b border-border bg-background/80 backdrop-blur-lg"
+          : "border-b border-transparent",
+      )}
+    >
+      <nav className="container flex h-16 items-center justify-between" aria-label="Main">
+        <a href="#home" className="font-display text-xl font-bold" onClick={() => setIsOpen(false)}>
+          {profile.shortName}
+          <span className="text-primary">.</span>
+        </a>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
+        <ul className="hidden items-center gap-1 md:flex">
+          {navLinks.map((link) => (
+            <li key={link.id}>
               <a
-                key={link.name}
-                href={link.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection(link.href);
-                }}
-                className="text-muted-foreground hover:text-primary transition-colors duration-300 font-medium"
+                href={`#${link.id}`}
+                aria-current={active === link.id ? "true" : undefined}
+                className={cn(
+                  "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                  active === link.id ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+                )}
               >
                 {link.name}
               </a>
-            ))}
-          </div>
+            </li>
+          ))}
+        </ul>
 
-          {/* CTA Button */}
-          <div className="hidden md:block">
-            <Button
-              onClick={() => scrollToSection("#contact")}
-              className="bg-gradient-primary text-primary-foreground hover:opacity-90 transition-opacity shadow-glow-primary"
-            >
-              Let's Talk
+        <div className="hidden md:block">
+          {profile.resumeUrl ? (
+            <Button asChild size="sm" variant="outline" className="border-primary/40 hover:bg-primary/10 hover:text-primary">
+              <a href={profile.resumeUrl} target="_blank" rel="noopener noreferrer">
+                <FileText size={16} /> Résumé
+              </a>
             </Button>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden text-foreground"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          ) : (
+            <Button asChild size="sm" className="bg-gradient-primary text-primary-foreground">
+              <a href="#contact">Let's talk</a>
+            </Button>
+          )}
         </div>
 
-        {/* Mobile Menu */}
-        {isOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-border pt-4">
-            <div className="flex flex-col gap-4">
-              {navLinks.map((link) => (
+        <button
+          className="text-foreground md:hidden"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label={isOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isOpen}
+        >
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </nav>
+
+      {isOpen && (
+        <div className="container pb-6 md:hidden">
+          <ul className="flex flex-col gap-1">
+            {navLinks.map((link) => (
+              <li key={link.id}>
                 <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollToSection(link.href);
-                  }}
-                  className="text-muted-foreground hover:text-primary transition-colors duration-300 font-medium"
+                  href={`#${link.id}`}
+                  onClick={() => setIsOpen(false)}
+                  className="block rounded-md px-3 py-3 font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
                 >
                   {link.name}
                 </a>
-              ))}
-              <Button
-                onClick={() => scrollToSection("#contact")}
-                className="bg-gradient-primary text-primary-foreground hover:opacity-90 transition-opacity w-full mt-2"
-              >
-                Let's Talk
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
-    </nav>
+              </li>
+            ))}
+          </ul>
+          {profile.resumeUrl && (
+            <Button asChild className="mt-4 w-full bg-gradient-primary text-primary-foreground">
+              <a href={profile.resumeUrl} target="_blank" rel="noopener noreferrer">
+                <FileText size={16} /> Download résumé
+              </a>
+            </Button>
+          )}
+        </div>
+      )}
+    </header>
   );
 };
 

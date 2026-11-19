@@ -1,87 +1,39 @@
-import { Github, Linkedin, Mail, Heart } from "lucide-react";
+import { Github, Linkedin, Mail, ArrowUp } from "lucide-react";
+import { profile } from "@/data/profile";
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
-
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  const links = [
+    { label: "GitHub", href: profile.github, icon: Github },
+    { label: "LinkedIn", href: profile.linkedin, icon: Linkedin },
+    { label: "Email", href: `mailto:${profile.email}`, icon: Mail },
+  ];
 
   return (
-    <footer className="bg-card border-t border-border py-12">
-      <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-3 gap-8 items-center">
-          {/* Logo & Description */}
-          <div>
+    <footer className="border-t border-border py-10">
+      <div className="container flex flex-col items-center justify-between gap-6 sm:flex-row">
+        <p className="text-sm text-muted-foreground">
+          © {new Date().getFullYear()} {profile.name}. Built with React & Tailwind CSS.
+        </p>
+        <div className="flex items-center gap-1">
+          {links.map(({ label, href, icon: Icon }) => (
             <a
-              href="#home"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection("#home");
-              }}
-              className="font-display text-2xl font-bold text-gradient-primary"
-            >
-              Hasan.
-            </a>
-            <p className="text-sm text-muted-foreground mt-2">
-              Software Engineering Student & Web Developer
-            </p>
-          </div>
-
-          {/* Quick Links */}
-          <div className="flex justify-center gap-6">
-            {["Home", "About", "Services", "Portfolio", "Contact"].map((link) => (
-              <a
-                key={link}
-                href={`#${link.toLowerCase()}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection(`#${link.toLowerCase()}`);
-                }}
-                className="text-sm text-muted-foreground hover:text-primary transition-colors"
-              >
-                {link}
-              </a>
-            ))}
-          </div>
-
-          {/* Social Links */}
-          <div className="flex justify-end gap-4">
-            <a
-              href="https://github.com/hasgilany"
-              target="_blank"
+              key={label}
+              href={href}
+              target={href.startsWith("http") ? "_blank" : undefined}
               rel="noopener noreferrer"
-              className="p-2 rounded-lg text-muted-foreground hover:text-primary transition-colors"
+              aria-label={label}
+              className="rounded-lg p-2 text-muted-foreground transition-colors hover:text-primary"
             >
-              <Github size={18} />
+              <Icon size={18} />
             </a>
-            <a
-              href="https://www.linkedin.com/in/hasan-saleh-ali-algailani-6a3406373"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-lg text-muted-foreground hover:text-primary transition-colors"
-            >
-              <Linkedin size={18} />
-            </a>
-            <a
-              href="mailto:hsgcr50@gmail.com"
-              className="p-2 rounded-lg text-muted-foreground hover:text-primary transition-colors"
-            >
-              <Mail size={18} />
-            </a>
-          </div>
-        </div>
-
-        {/* Copyright */}
-        <div className="mt-8 pt-8 border-t border-border text-center">
-          <p className="text-sm text-muted-foreground flex items-center justify-center gap-1">
-            © {currentYear} Hasan Saleh Algailani. Made with
-            <Heart className="text-secondary" size={14} fill="currentColor" />
-            All rights reserved.
-          </p>
+          ))}
+          <a
+            href="#home"
+            aria-label="Back to top"
+            className="ml-2 rounded-lg border border-border p-2 text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+          >
+            <ArrowUp size={16} />
+          </a>
         </div>
       </div>
     </footer>

@@ -6,7 +6,17 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+  	container: {
+  		center: true,
+  		padding: '1.25rem',
+  		screens: { '2xl': '1200px' }
+  	},
   	extend: {
+  		fontFamily: {
+  			sans: ['Inter', 'system-ui', 'sans-serif'],
+  			display: ['"Space Grotesk"', 'Inter', 'sans-serif'],
+  			mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace']
+  		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
@@ -65,6 +75,10 @@ export default {
   			}
   		},
   		keyframes: {
+  			'fade-up': {
+  				from: { opacity: '0', transform: 'translateY(16px)' },
+  				to: { opacity: '1', transform: 'none' }
+  			},
   			'accordion-down': {
   				from: {
   					height: '0'
@@ -83,6 +97,7 @@ export default {
   			}
   		},
   		animation: {
+  			'fade-up': 'fade-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both',
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out'
   		}

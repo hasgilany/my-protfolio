@@ -1,200 +1,175 @@
 import { useState } from "react";
-import { ExternalLink, Github, Flame, Layout, Users } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import projectFireSensing from "@/assets/fire-sensing-dashboard.jpg";
-import projectTennisScoreboard from "@/assets/tennis-scoreboard.jpg";
-import DragAndDropBuilder from "@/assets/drag-and-drop.png";
-import MedicineTracker from "@/assets/medicine_tracker.png";
-import projectScadaSystem from "@/assets/Scada-System.png";
+import { ArrowUpRight, Github } from "lucide-react";
+import { projects, type Project } from "@/data/profile";
+import { cn } from "@/lib/utils";
 
+const categories = ["All", "IoT", "Web", "Mobile"] as const;
 
+const ProjectLinks = ({ project }: { project: Project }) => (
+  <div className="flex flex-wrap gap-3">
+    {project.liveUrl && (
+      <a
+        href={project.liveUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+      >
+        Live demo <ArrowUpRight size={15} />
+      </a>
+    )}
+    {project.codeUrl && (
+      <a
+        href={project.codeUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground"
+      >
+        <Github size={15} /> Source
+      </a>
+    )}
+  </div>
+);
 
-const categories = ["All", "Web Development", "IoT", "Mobile App"];
+const FeaturedProject = ({ project, flip }: { project: Project; flip: boolean }) => {
+  const Icon = project.icon;
+  return (
+    <article className="reveal group grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
+      <a
+        href={project.liveUrl ?? project.codeUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={cn(
+          "relative block overflow-hidden rounded-2xl border border-border bg-muted",
+          flip && "lg:order-2",
+        )}
+        aria-label={`Open ${project.title}`}
+      >
+        <img
+          src={project.image}
+          alt={`${project.title} screenshot`}
+          loading="lazy"
+          className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+        />
+      </a>
+      <div>
+        <p className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-primary">
+          <Icon size={14} /> Featured · {project.category}
+        </p>
+        <h3 className="mt-3 text-2xl font-bold md:text-3xl">{project.title}</h3>
+        <p className="mt-4 leading-relaxed text-muted-foreground">{project.summary}</p>
+        <ul className="mt-5 space-y-2">
+          {project.highlights.map((h) => (
+            <li key={h} className="flex gap-3 text-sm text-foreground/90">
+              <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary" />
+              {h}
+            </li>
+          ))}
+        </ul>
+        <ul className="mt-5 flex flex-wrap gap-2">
+          {project.stack.map((t) => (
+            <li key={t} className="chip">{t}</li>
+          ))}
+        </ul>
+        <div className="mt-6">
+          <ProjectLinks project={project} />
+        </div>
+      </div>
+    </article>
+  );
+};
 
-const projects = [
-  {
-    id: 1,
-    title: "Fire Sensing System",
-    category: "IoT",
-    description:
-      "Smart fire detection system that shows the shortest exit route and tracks people count via camera to assist firefighters during emergencies.",
-    image: projectFireSensing,
-    technologies: ["Arduino", "Python", "Mobile App"],
-    icon: Flame,
-    color: "secondary",
-    liveUrl: "https://himaya71.vercel.app/",
-  },
-  {
-    id: 2,
-    title: "Tennis Scoreboard",
-    category: "IoT",
-    description:
-      "Real-time tennis scoreboard with live score updates, player statistics, and match tracking for tournaments.",
-    image: projectTennisScoreboard,
-    technologies: ["Arduino", "JavaScript", "Website"],
-    icon: Flame,
-    color: "secondary",
-    liveUrl: "https://tennis-scoreboard-livid.vercel.app/",
-    liveGithub: "https://github.com/hasgilany/Tennis-Scoreboard",
-  },
-  {
-    id: 3,
-    title: "Scada System ",
-    category: "IoT",
-    description:
-      "Industrial SCADA system for monitoring and controlling industrial processes in real-time.",
-    image: projectScadaSystem,
-    technologies: ["Arduino", "JavaScript", "Website"],
-    icon: Flame,
-    color: "secondary",
-    liveUrl: "https://scada-system.vercel.app/",
-    liveGithub: "https://github.com/hasgilany/Scada-System",
-
-  },
-
-  {
-    id: 4,
-    title: "Drag and Drop Website Builder",
-    category: "Web Development",
-    description:
-      "User-friendly drag-and-drop website builder enabling users to create responsive websites without coding knowledge.",
-    image: DragAndDropBuilder,
-    technologies: ["Prisma", "React", "TypeScript", "Tailwind CSS"],
-    icon: Users,
-    color: "primary",
-    liveGithub: "https://github.com/hasgilany/ddwb",
-  },
-
-  {
-    id: 5,
-    title: "Medicine Tracker and Notifications App",
-    category: "Mobile App",
-    description:
-      "Mobile app that helps users track their medication schedules and sends timely notifications for better health management.",
-    image: MedicineTracker,
-    technologies: ["flutter", "Dart", "Firebase"],
-    icon: Users,
-    color: "primary",
-    liveGithub: "https://github.com/hasgilany/medicine_tracker",
-  },
-
-];
+const ProjectCard = ({ project }: { project: Project }) => {
+  const Icon = project.icon;
+  return (
+    <article className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-2xl hover:shadow-black/40">
+      <div className="overflow-hidden bg-muted">
+        <img
+          src={project.image}
+          alt={`${project.title} screenshot`}
+          loading="lazy"
+          className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      </div>
+      <div className="flex flex-1 flex-col p-6">
+        <p className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+          <Icon size={14} className="text-primary" /> {project.category}
+        </p>
+        <h3 className="mt-2 text-xl font-semibold">{project.title}</h3>
+        <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{project.summary}</p>
+        <ul className="mt-4 flex flex-wrap gap-2">
+          {project.stack.map((t) => (
+            <li key={t} className="chip">{t}</li>
+          ))}
+        </ul>
+        <div className="mt-5">
+          <ProjectLinks project={project} />
+        </div>
+      </div>
+    </article>
+  );
+};
 
 const PortfolioSection = () => {
-  const [activeCategory, setActiveCategory] = useState("All");
-
-  const filteredProjects =
-    activeCategory === "All"
-      ? projects
-      : projects.filter((project) => project.category === activeCategory);
+  const [active, setActive] = useState<(typeof categories)[number]>("All");
+  const featured = projects.filter((p) => p.featured);
+  const filtered = active === "All" ? projects : projects.filter((p) => p.category === active);
 
   return (
-    <section id="portfolio" className="py-24 bg-muted/30 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 blob blur-3xl opacity-40" />
-
-      <div className="container mx-auto px-4 relative z-10">
-        {/* Section Header */}
-        <div className="text-center mb-12">
-          <p className="text-primary font-medium mb-2">PORTFOLIO</p>
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-            Digital Product
-            <span className="text-gradient-primary"> Showcases</span>
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            A collection of my recent projects spanning web development, IoT integration, and admin dashboards.
+    <section id="projects" className="section">
+      <div className="container">
+        <div className="reveal max-w-2xl">
+          <p className="eyebrow">03 · Projects</p>
+          <h2 className="section-title">Things I've built.</h2>
+          <p className="mt-4 text-lg text-muted-foreground">
+            From a production e-commerce store with real payments to IoT systems and mobile apps, most of them live.
           </p>
         </div>
 
-        {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setActiveCategory(category)}
-              className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                activeCategory === category
-                  ? "bg-gradient-primary text-primary-foreground shadow-glow-primary"
-                  : "bg-card border border-border text-muted-foreground hover:text-primary hover:border-primary/50"
-              }`}
-            >
-              {category}
-            </button>
+        <div className="mt-16 space-y-24">
+          {featured.map((p, i) => (
+            <FeaturedProject key={p.title} project={p} flip={i % 2 === 1} />
           ))}
         </div>
 
-        {/* Projects Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project, index) => {
-            const IconComponent = project.icon;
-            const colorClass =
-              project.color === "primary"
-                ? "text-primary"
-                : project.color === "secondary"
-                ? "text-secondary"
-                : "text-accent";
+        <div className="reveal mt-28">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+            <h3 className="text-2xl font-bold">All projects</h3>
+            <div className="flex flex-wrap gap-2" role="tablist" aria-label="Filter projects">
+              {categories.map((c) => (
+                <button
+                  key={c}
+                  role="tab"
+                  aria-selected={active === c}
+                  onClick={() => setActive(c)}
+                  className={cn(
+                    "rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
+                    active === c
+                      ? "bg-foreground text-background"
+                      : "border border-border text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          </div>
 
-            return (
-              <div
-                key={project.id}
-                className="group bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                {/* Image */}
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      className="rounded-full border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                      onClick={() => window.open(project.liveUrl, '_blank')}
-                    >
-                      <ExternalLink size={18} />
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      className="rounded-full border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                      onClick={() => window.open(project.liveGithub, '_blank')}
-                    >
-                      <Github size={18} />
-                    </Button>
-                  </div>
-                </div>
+          <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {filtered.map((p) => (
+              <ProjectCard key={p.title} project={p} />
+            ))}
+          </div>
 
-                {/* Content */}
-                <div className="p-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    <IconComponent className={colorClass} size={18} />
-                    <span className={`text-xs font-medium ${colorClass}`}>
-                      {project.category}
-                    </span>
-                  </div>
-                  <h3 className="font-display text-xl font-semibold mb-2">
-                    {project.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                    {project.description}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {project.technologies.map((tech) => (
-                      <span
-                        key={tech}
-                        className="px-2 py-1 bg-muted rounded text-xs text-muted-foreground"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+          <div className="mt-10 text-center">
+            <a
+              href="https://github.com/hasgilany"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+            >
+              <Github size={16} /> More on GitHub <ArrowUpRight size={14} />
+            </a>
+          </div>
         </div>
       </div>
     </section>
