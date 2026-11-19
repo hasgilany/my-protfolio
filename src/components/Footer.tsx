@@ -12,7 +12,7 @@ const Footer = () => {
     <footer className="border-t border-border py-10">
       <div className="container flex flex-col items-center justify-between gap-6 sm:flex-row">
         <p className="text-sm text-muted-foreground">
-          © {new Date().getFullYear()} {profile.name}. Built with React & Tailwind CSS.
+          © {new Date().getFullYear()} {profile.name}. All rights reserved.
         </p>
         <div className="flex items-center gap-1">
           {links.map(({ label, href, icon: Icon }) => (
