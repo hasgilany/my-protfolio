@@ -1,11 +1,12 @@
 import type { LucideIcon } from "lucide-react";
-import { Flame, Trophy, Factory, LayoutTemplate, Pill, ShoppingBag } from "lucide-react";
+import { Flame, Trophy, Factory, LayoutTemplate, Pill, ShoppingBag, UserRound } from "lucide-react";
 import projectFireSensing from "@/assets/fire-sensing-dashboard.jpg";
 import projectTennisScoreboard from "@/assets/tennis-scoreboard.jpg";
 import projectDragAndDrop from "@/assets/drag-and-drop.png";
 import projectMedicineTracker from "@/assets/medicine_tracker.png";
 import projectScadaSystem from "@/assets/Scada-System.png";
 import projectNajdMill from "@/assets/najd-mill.jpg";
+import projectPortfolio from "@/assets/portfolio-site.jpg";
 
 /**
  * All personal content lives here. Edit this file to update the site.
@@ -37,8 +38,8 @@ export const about = [
 ];
 
 export const highlights = [
-  { value: "6", label: "Shipped projects" },
-  { value: "4", label: "Live deployments" },
+  { value: "7", label: "Shipped projects" },
+  { value: "5", label: "Live deployments" },
   { value: "1", label: "Industry internship" },
 ];
 
@@ -157,6 +158,18 @@ export const projects: Project[] = [
     icon: Trophy,
     liveUrl: "https://tennis-scoreboard-livid.vercel.app/",
     codeUrl: "https://github.com/hasgilany/Tennis-Scoreboard",
+  },
+  {
+    title: "Personal Portfolio",
+    category: "Web",
+    summary:
+      "This site: a fast, responsive and accessible portfolio on a custom domain, with a working contact form and all content driven from a single typed data file.",
+    highlights: ["Contact form via EmailJS", "Scroll animations that respect reduced-motion"],
+    image: projectPortfolio,
+    stack: ["React", "TypeScript", "Tailwind CSS", "Vite"],
+    icon: UserRound,
+    liveUrl: "https://www.hasanalgailani.dev/",
+    codeUrl: "https://github.com/hasgilany/my-protfolio",
   },
   {
     title: "Drag & Drop Website Builder",
